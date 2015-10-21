@@ -66,6 +66,7 @@ public class OlaAppCenterApiTest {
         		when().post("/getUserInfo").
 				then().extract().body().asString();		
 		
+		System.out.println("**********Response from getUserInfo**********");
 		System.out.println(body);
 		System.out.println();
 
@@ -108,6 +109,7 @@ public class OlaAppCenterApiTest {
         		when().post("/findUserInstances").
 				then().extract().body().asString();		
 		
+		System.out.println("**********Response from findUserInstances**********");
 		System.out.println(body);
 		System.out.println();
 
@@ -152,6 +154,8 @@ public class OlaAppCenterApiTest {
         		when().post("/startInstance").
 				then().extract().body().asString();		
 		
+		
+		System.out.println("**********Response from startInstance**********");
 		System.out.println(body);
 		System.out.println();
 
@@ -190,7 +194,9 @@ public class OlaAppCenterApiTest {
         		when().post("/findUserInstanceSummary").
 				then().extract().body().asString();		
 		
+		System.out.println("**********Response from startInstance**********");
 		System.out.println(body);
+		System.out.println();
 
 		ArrayList<String> pageIDList = 		
 	    		given().spec(requestSpec).

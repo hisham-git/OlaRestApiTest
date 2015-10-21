@@ -1,41 +1,25 @@
 package OlaTest.OlaRestApiTest;
 
-import static org.testng.AssertJUnit.assertEquals;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import static com.jayway.restassured.RestAssured.*;
-import static com.jayway.restassured.path.json.JsonPath.*;
-
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.path.json.JsonPath;
-import com.jayway.restassured.response.Response;
-import com.jayway.restassured.specification.RequestSpecification;
-
-
-
-import com.jayway.restassured.response.Response;
-//import org.junit.Test;
-
-
+import static org.testng.AssertJUnit.assertTrue;
 import static com.jayway.restassured.RestAssured.get;
-import static com.jayway.restassured.http.ContentType.JSON;
-import static org.hamcrest.Matchers.*;
+import static com.jayway.restassured.RestAssured.given;
+
+import java.util.ArrayList;
+
+import org.json.JSONException;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.response.Response;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+
+//import org.junit.Test;
 //import static org.junit.Assert.assertThat;
 
 public class RestCountriesApiTest {
@@ -51,7 +35,39 @@ public class RestCountriesApiTest {
 	//	RestAssured.basePath = "/rest/v1/name";
 	}
 	
-	@Test(priority = 2)
+		
+	@Test(priority = 1) public void extract_email_and_validations() {
+        ArrayList<String> path = get("/users").then().assertThat().statusCode(200).and().extract().path("email");
+        System.out.println();
+        for (String email : path) {
+				Pattern p = Pattern.compile("^([A-Za-z0-9_\\.-]+)@([\\da-z\\.-]+)\\.([a-z\\.]{2,6})$");
+		        Matcher m = p.matcher(email);
+		        
+		        if ( m.find() ) {
+		        	System.out.println(email + " => Valid email format");
+		        } else {
+		        	System.out.println(email + " => Invalid email format");
+		        }
+		}
+    }
+	
+	@Test(priority = 2) public void extract_username_and_validations() {
+        ArrayList<String> path = get("/users").then().assertThat().statusCode(200).and().extract().path("username");
+       
+        System.out.println();
+        for (String username : path) {
+				Pattern p = Pattern.compile("^[A-Za-z0-9_.-]{8,16}$");
+		        Matcher m = p.matcher(username);
+
+		        if ( m.find() ) {
+		        	System.out.println(username + " => Valid username");
+		        } else {
+		        	System.out.println(username + " => Invalid username");
+		        }
+		}
+    }
+	
+	@Test(priority = 3)
 	public void getCountryInfo() throws JSONException, InterruptedException {
 
 	    String body = get("/users").then().extract().body().asString();		
@@ -60,16 +76,17 @@ public class RestCountriesApiTest {
 
 	}
 	
-	@Test(priority = 1) public void
-    extract_single_path_works_after_multiple_body_validations() {
-        ArrayList<String> path = get("/users").then().assertThat().statusCode(200).and().extract().path("name");
-        
-        for (String name : path) {
-				System.out.println(name);	
-		}
+	@Test(priority = 4)
+	public void getCountryInfoWithLog() throws JSONException, InterruptedException {
+		System.out.println("**********Request Logging**********");
+		given().log().headers();
+		
+		
+		System.out.println("**********Response Logging**********");
+		get("/users").then().log().headers();
 
-      //  System.out.println(path);
-    }
+	}
+
 	
 	/*	
 	

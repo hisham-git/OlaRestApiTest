@@ -3,15 +3,12 @@
 <suite guice-stage="DEVELOPMENT" name="Failed suite [Default suite]">
   <test name="Default test(failed)">
     <classes>
-      <class name="OlaTest.OlaRestApiTest.OlaAppCenterApiTest">
+      <class name="OlaTest.OlaRestApiTest.RestCountriesApiTest">
         <methods>
-          <include name="getUserInfo"/>
-          <include name="findUserInstanceSummary"/>
-          <include name="setUp"/>
-          <include name="findUserInstances"/>
-          <include name="startInstance"/>
+          <include name="setupURL"/>
+          <include name="extract_username_and_validations"/>
         </methods>
-      </class> <!-- OlaTest.OlaRestApiTest.OlaAppCenterApiTest -->
+      </class> <!-- OlaTest.OlaRestApiTest.RestCountriesApiTest -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->
