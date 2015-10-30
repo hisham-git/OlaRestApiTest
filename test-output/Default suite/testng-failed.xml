@@ -5,8 +5,8 @@
     <classes>
       <class name="OlaTest.OlaRestApiTest.RestCountriesApiTest">
         <methods>
+          <include name="getCountryInfo"/>
           <include name="setupURL"/>
-          <include name="extract_username_and_validations"/>
         </methods>
       </class> <!-- OlaTest.OlaRestApiTest.RestCountriesApiTest -->
     </classes>

@@ -7,17 +7,19 @@ import static com.jayway.restassured.RestAssured.given;
 import java.util.ArrayList;
 
 import org.json.JSONException;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.response.Response;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static com.jayway.restassured.matcher.RestAssuredMatchers.*;
+import static org.hamcrest.Matchers.*;
 
 //import org.junit.Test;
 //import static org.junit.Assert.assertThat;
@@ -36,8 +38,13 @@ public class RestCountriesApiTest {
 	}
 	
 		
-	@Test(priority = 1) public void extract_email_and_validations() {
-        ArrayList<String> path = get("/users").then().assertThat().statusCode(200).and().extract().path("email");
+	@Test(enabled = false) public void extract_email_and_validations() {
+		
+        ArrayList<String> path = get("/users").then().assertThat().statusCode(200)
+        		.and().body("address.street", hasItem("Kulas Light"))
+        		.and().body("email", hasItems("Sincere@april.biz","Shanna@melissa.tv"))
+        		.and().extract().path("email");
+        
         System.out.println();
         for (String email : path) {
 				Pattern p = Pattern.compile("^([A-Za-z0-9_\\.-]+)@([\\da-z\\.-]+)\\.([a-z\\.]{2,6})$");
@@ -51,7 +58,7 @@ public class RestCountriesApiTest {
 		}
     }
 	
-	@Test(priority = 2) public void extract_username_and_validations() {
+	@Test(enabled = false) public void extract_username_and_validations() {
         ArrayList<String> path = get("/users").then().assertThat().statusCode(200).and().extract().path("username");
        
         System.out.println();
@@ -67,16 +74,34 @@ public class RestCountriesApiTest {
 		}
     }
 	
-	@Test(priority = 3)
+	@Test(enabled = true)
 	public void getCountryInfo() throws JSONException, InterruptedException {
-
-	    String body = get("/users").then().extract().body().asString();		
 		
-		System.out.println(body);
+		Response resp = get("/users").then().extract().response();
+
+		System.out.println(resp.getStatusCode());
+		System.out.println("********************");
+		System.out.println(resp.getHeaders());
+		System.out.println("********************");
+		System.out.println(resp.getCookies());
+		System.out.println("********************");
+		System.out.println(resp.getSessionId());
+		System.out.println("********************");
+		System.out.println(resp.getBody().asString());
+		
+		Assert.assertNotNull(resp.jsonPath().getString("address.geo.lat"), " array is null" );
+
+	    String body = get("/users").then().extract().body().asString();
+	    
+	    JsonPath jsonPath = new JsonPath(body);
+		System.out.println(jsonPath.getList("address.geo.lat"));
+		
+	//	System.out.println(body);
 
 	}
-	
-	@Test(priority = 4)
+
+/*	
+	@Test(priority = 6)
 	public void getCountryInfoWithLog() throws JSONException, InterruptedException {
 		System.out.println("**********Request Logging**********");
 		given().log().headers();
@@ -86,7 +111,7 @@ public class RestCountriesApiTest {
 		get("/users").then().log().headers();
 
 	}
-
+*/
 	
 	/*	
 	
